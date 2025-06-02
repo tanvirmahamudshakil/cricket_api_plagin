@@ -1,6 +1,8 @@
 package com.example.cricket_api
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.example.secure_api.NativeLib
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -48,12 +50,16 @@ class CricketApiPlugin: FlutterPlugin, MethodCallHandler {
             args["seriesSlug"] as? String ?: ""
           )
           "getBannerImageBytes" -> {
-            val slug = args["slug"] as? String ?: ""
-            val imageBytes = nativeLib.getBannerImageBytes(slug)
-            if (imageBytes != null) {
-              result.success(imageBytes)
-            } else {
-              result.error("IMAGE_ERROR", "Failed to load image for slug: $slug", null)
+            val slug = (call.argument<String>("slug") ?: "intl-test")
+
+            nativeLib.getBannerImageBytes(slug) { bytes ->
+              Handler(Looper.getMainLooper()).post {
+                if (bytes != null) {
+                  result.success(bytes)
+                } else {
+                  result.error("IMAGE_FETCH_FAILED", "Image fetch failed for $slug", null)
+                }
+              }
             }
           }
           "getLeagueTable" -> nativeLib.GetLeagueTable(
