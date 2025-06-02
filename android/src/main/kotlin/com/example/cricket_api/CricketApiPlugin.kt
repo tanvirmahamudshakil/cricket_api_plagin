@@ -47,6 +47,15 @@ class CricketApiPlugin: FlutterPlugin, MethodCallHandler {
             args["country"] as? String ?: "",
             args["seriesSlug"] as? String ?: ""
           )
+          "getBannerImageBytes" -> {
+            val slug = args["slug"] as? String ?: ""
+            val imageBytes = nativeLib.getBannerImageBytes(slug)
+            if (imageBytes != null) {
+              result.success(imageBytes)
+            } else {
+              result.error("IMAGE_ERROR", "Failed to load image for slug: $slug", null)
+            }
+          }
           "getLeagueTable" -> nativeLib.GetLeagueTable(
             args["leaguename"] as? String ?: "",
             args["leagueslug"] as? String ?: ""
