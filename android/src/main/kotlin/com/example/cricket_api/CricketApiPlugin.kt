@@ -49,19 +49,7 @@ class CricketApiPlugin: FlutterPlugin, MethodCallHandler {
             args["country"] as? String ?: "",
             args["seriesSlug"] as? String ?: ""
           )
-          "getBannerImageBytes" -> {
-            val slug = (call.argument<String>("slug") ?: "intl-test")
-
-            nativeLib.getBannerImageBytes(slug) { bytes ->
-              Handler(Looper.getMainLooper()).post {
-                if (bytes != null) {
-                  result.success(bytes)
-                } else {
-                  result.error("IMAGE_FETCH_FAILED", "Image fetch failed for $slug", null)
-                }
-              }
-            }
-          }
+          "getBannerImageBytes" ->nativeLib.getBannerImageBytes(args["slug"] as? String ?: "")
           "getLeagueTable" -> nativeLib.GetLeagueTable(
             args["leaguename"] as? String ?: "",
             args["leagueslug"] as? String ?: ""
