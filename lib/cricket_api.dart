@@ -34,8 +34,8 @@ class CricketApi {
 
   static Future<String?> getSomeDayMatch() => _channel.invokeMethod("getSomeDayMatch");
 
-  static Future<Uint8List?> getBannerImageBytes(String slug) async {
+  static Future getBannerImageBytes(String slug) async {
     final bytes = await _channel.invokeMethod("getBannerImageBytes", {"slug": slug});
-    return bytes != null ? Uint8List.fromList(List<int>.from(bytes)) : null;
+    return bytes;
   }
 }
